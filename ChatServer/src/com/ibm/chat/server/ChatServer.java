@@ -7,9 +7,10 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
+import java.util.logging.Logger;
 import java.util.logging.Level;
 
-import com.sun.istack.internal.logging.Logger;
+//import com.sun.istack.internal.logging.Logger;
 
 
 /**
@@ -49,7 +50,7 @@ public class ChatServer implements Runnable{
     /**
      * The Logger handle for the Chat Server
      */
-    private static final Logger LOGGER = Logger.getLogger(ChatServer.class);
+    private static final Logger LOGGER = Logger.getLogger(ChatServer.class.getName());
     /**
      * The application main method, which just listens on a port and
      * spawns handler threads.
@@ -79,7 +80,7 @@ public class ChatServer implements Runnable{
     		startserver(PORT);
     	}
     	catch (Exception e){
-    		LOGGER.logException(e, Level.SEVERE);
+    		LOGGER.log(Level.SEVERE, e.getMessage());
     	}
     }
 
@@ -206,7 +207,7 @@ public class ChatServer implements Runnable{
                     }
                 }
             } catch (IOException e) {
-                LOGGER.logException(e, Level.SEVERE);
+                LOGGER.log(Level.SEVERE, e.getMessage());
             } finally {
                 // This client is going down!  Remove its name and its print
                 // writer from the sets, and close its socket.

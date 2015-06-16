@@ -1,0 +1,57 @@
+<project name="ChatServer" default="main" basedir=".">
+   <target name="init">
+      <property name="sourceDir" value="src" />
+      <property name="outputDir" value="bin" />
+   	  <property name="testDir" location="test" />
+      <property name="deployDir" value="deploy" />
+   	  <property name="testreportDir" location="testreport" />
+   </target>
+	<!-- Define the classpath which includes the junit.jar and the classes after compiling--> 
+	<path id="junit.class.path"> 
+		<pathelement location="lib/junit.jar" /> 
+		<pathelement location="lib/org.hamcrest.core_1.3.0.v201303031735.jar" /> 
+		<pathelement location="${outputDir}" />
+	</path>
+   <target name="clean" depends="init">
+      <delete dir="${outputDir}" />
+   	  <delete dir="${deployDir}" />
+   	  <delete dir="${testreportDir}" />
+   </target>
+   <target name="prepare" depends="clean">
+      <mkdir dir="${outputDir}" />
+   	  <mkdir dir="${deployDir}" />
+   	  <mkdir dir="${testreportDir}" />
+   </target>
+   <target name="compile" depends="prepare">
+     <javac srcdir="${sourceDir}" destdir="${outputDir}">
+     	<classpath refid="junit.class.path" />
+     </javac>
+   	 <javac srcdir="${testDir}" destdir="${outputDir}">
+   	 	<classpath refid="junit.class.path" />
+   	 </javac>
+   </target>
+	<!-- Run the JUnit Tests, results in XML -->  
+	<target name="junit" depends="compile"> 
+		<junit printsummary="on" fork="true" haltonfailure="yes"> 
+			<classpath refid="junit.class.path" /> 
+				<classpath> 
+					<pathelement location="${outputDir}"/> 
+				</classpath> 
+			<formatter type="xml" /> 
+			<batchtest todir="${testreportDir}"> 
+				<fileset dir="${testDir}"> 
+					<include name="**/*Test*.java" /> 
+				</fileset> 
+			</batchtest> 
+		</junit> 
+	</target> 
+   <!--Creates the deployable jar file --> 
+	<target name="jar" depends="compile, junit"> 
+		<jar destfile="${deployDir}\com.ibm.chat.Server.jar" basedir="${outputDir}"> 
+			<manifest> <attribute name="Main-Class" value="com.ibm.chat.server.ChatServer" /> </manifest> 
+		</jar> 
+	</target> 
+	<target name="main" depends="compile, jar"> 
+		<description>Main target</description> 
+	</target>
+</project>

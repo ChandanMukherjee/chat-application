@@ -1,0 +1,27 @@
+<project name="ChatClient" default="main" basedir=".">
+   <target name="init">
+      <property name="sourceDir" value="src" />
+      <property name="outputDir" value="bin" />
+      <property name="deployDir" value="deploy" />
+   </target>
+   <target name="clean" depends="init">
+      <delete dir="${outputDir}" />
+   	  <delete dir="${deployDir}" />
+   </target>
+   <target name="prepare" depends="clean">
+      <mkdir dir="${outputDir}" />
+   	  <mkdir dir="${deployDir}" />
+   </target>
+   <target name="compile" depends="prepare">
+     <javac srcdir="${sourceDir}" destdir="${outputDir}" />
+   </target>
+   <!--Creates the deployable jar file --> 
+	<target name="jar" depends="compile"> 
+		<jar destfile="${deployDir}\com.ibm.chat.Client.jar" basedir="${outputDir}"> 
+			<manifest> <attribute name="Main-Class" value="com.ibm.chat.client.ChatClient" /> </manifest> 
+		</jar> 
+	</target> 
+	<target name="main" depends="compile, jar"> 
+		<description>Main target</description> 
+	</target>
+</project>
